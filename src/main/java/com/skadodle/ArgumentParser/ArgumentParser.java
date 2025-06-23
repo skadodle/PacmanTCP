@@ -51,8 +51,8 @@ public class ArgumentParser {
     }
 
     private static void validatePort(int port) {
-        if (port < 0 || port > 65535) {
-            throw new IllegalArgumentException("Port must be between 0 and 65535");
+        if (port < 1000 || port > 65535) {
+            throw new IllegalArgumentException("Port must be between 1000 and 65535");
         }
     }
 
