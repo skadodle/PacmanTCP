@@ -1,6 +1,7 @@
 package com.skadodle.ArgumentParser;
 
 public class Arguments {
+
     private String ip = null;
     private boolean isIpSet = false;
 

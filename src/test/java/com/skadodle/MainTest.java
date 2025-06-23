@@ -31,5 +31,6 @@ class MainTest {
         assertFalse(isValidIp("192.168.1.1.1"));
         assertFalse(isValidIp("192.168.1.256"));
         assertFalse(isValidIp("abc.def.ghi.jkl"));
+        assertFalse(isValidIp("256.100.100.100"));
     }
 }

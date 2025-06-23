@@ -21,6 +21,8 @@ public class Main {
             }
             catch (IllegalArgumentException e) {
                 System.err.println(e.getMessage());
+                System.err.flush();
+                System.exit(1);
             }
 
             // Set variables
@@ -33,7 +35,9 @@ public class Main {
                 isServer = true;
         } catch (IllegalArgumentException e) {
             System.err.println("Error parsing arguments: " + e.getMessage());
-            System.err.println("Usage: java Main -i <ip> -p <port> -c <count> -n <name>");
+            System.err.println("./gradlew run --args=\"-i <validIp> -p <validPort> -n <validName> " +
+                    "-c <countOfPlayers between 2 and 4>\"");
+            System.err.flush();
             System.exit(1);
         }
 
@@ -45,6 +49,19 @@ public class Main {
 
         System.out.println("-".repeat(100));
 
-
+        if (isServer) {
+            Server server = new Server((short)port, countOfPlayers, name);
+            Map map = new Map();
+            server.acceptClients();
+            server.sendMap(map);
+            server.receiveReadyFromClients();
+            Game game = server.sendStart(map.getPlayerPosX(), map.getPlayerPosY());
+        } else {
+            Client client = new Client((short)port, ip, name);
+            client.sendConnect();
+            Map map = new Map(client.receiveMap());
+            client.sendReady();
+            Game game = client.receiveStart();
+        }
     }
 }

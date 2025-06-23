@@ -194,9 +194,9 @@ public class Map {
         for (int i = 0; i < MAP_FULL_WIDTH; i++) {
             for (int j = 0; j < MAP_FULL_HEIGHT; j++) {
                 switch (fullMap[i][j]) {
-                    case WALL: sb.append(WALLSYM); break;
-                    case DOT: sb.append(DOTSYM); break;
-                    case PLAYER: sb.append(PLAYERSYM); break;
+                    case WALL: sb.append(WALL_SYM); break;
+                    case DOT: sb.append(DOT_SYM); break;
+                    case PLAYER: sb.append(PLAYER_SYM); break;
                 }
             }
             sb.append("\n");

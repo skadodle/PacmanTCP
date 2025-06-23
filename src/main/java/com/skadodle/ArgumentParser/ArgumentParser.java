@@ -4,7 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ArgumentParser {
-    public static Arguments parse(String[] args) {
+    public static Arguments parse(String[] args) throws IllegalArgumentException {
         Arguments arguments = new Arguments();
 
         try {
@@ -16,7 +16,7 @@ public class ArgumentParser {
                         break;
                     case "-p":
                         int port = Integer.parseInt(args[++i]);
-                        validateIp(port);
+                        validatePort(port);
                         arguments.setPort(port);
                         break;
                     case "-c":
@@ -35,6 +35,8 @@ public class ArgumentParser {
             throw new IllegalArgumentException("Missing value for option: " + args[args.length - 1]);
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("Invalid number format");
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(e.getMessage());
         }
 
         return arguments;
@@ -48,7 +50,7 @@ public class ArgumentParser {
             throw new IllegalArgumentException("Invalid IP address");
     }
 
-    private static void validateIp(int port) {
+    private static void validatePort(int port) {
         if (port < 0 || port > 65535) {
             throw new IllegalArgumentException("Port must be between 0 and 65535");
         }
