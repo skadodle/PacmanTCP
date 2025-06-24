@@ -20,6 +20,53 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter'
 }
 
+tasks.register('runClient', JavaExec) {
+    group = 'com.skadodle'
+    description = 'Запускает клиента'
+    mainClass.set('com.skadodle.Main')
+    classpath = sourceSets.main.runtimeClasspath
+    args '-p', '14045', '-i', '127.0.0.1', '-n', 'SlavaClient'
+}
+
+tasks.register('runServer', JavaExec) {
+    group = 'com.skadodle'
+    description = 'Запускает сервер'
+    mainClass.set('com.skadodle.Main')
+    classpath = sourceSets.main.runtimeClasspath
+    args '-p', '14045', '-c', '2', '-n', 'SlavaServer'
+}
+
+tasks.register('runBoth') {
+    group = 'com.skadodle'
+    description = 'Запускает клиента и сервер одновременно с выводом консоли'
+
+    doLast {
+        def cp = sourceSets.main.runtimeClasspath.asPath
+        def clientCommand = ["java", "-cp", cp, "com.skadodle.Main", "-p", "14045", "-i", "127.0.0.1", "-n", "SlavaClient"]
+        def serverCommand = ["java", "-cp", cp, "com.skadodle.Main", "-p", "14045", "-c", "2", "-n", "SlavaServer"]
+
+        def startAndPipe = { List cmd, String label ->
+            def proc = new ProcessBuilder(cmd)
+                    .redirectErrorStream(true)
+                    .start()
+
+            Thread.start {
+                proc.inputStream.withReader { reader ->
+                    reader.eachLine { println "[${label}] $it" }
+                }
+            }
+
+            return proc
+        }
+
+        def serverProc = startAndPipe(serverCommand, "SERVER")
+        def clientProc = startAndPipe(clientCommand, "CLIENT")
+
+        clientProc.waitFor()
+        serverProc.waitFor()
+    }
+}
+
 javafx {
     version = "17.0.2"
     modules = [ 'javafx.controls', 'javafx.fxml' ]
