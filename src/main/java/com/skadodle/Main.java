@@ -4,6 +4,11 @@ import com.skadodle.ArgumentParser.ArgumentParser;
 import com.skadodle.ArgumentParser.Arguments;
 
 public class Main {
+    static {
+        System.setProperty("--module-path /Library/Java/JavaVirtualMachines/javafx-sdk-21.0.7/lib --add-modules=javafx.controls,javafx.fxml", "true");
+    }
+
+
     public static void main(String[] args) {
         System.out.println("-".repeat(100));
         int port = -1;
